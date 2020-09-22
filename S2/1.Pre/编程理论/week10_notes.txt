@@ -1,0 +1,22 @@
+Exponentiation problem:
+
+Inv is not TRUE. For the following state Inv is false:
+{x:10,n:2,y:2,b:3,i:5}
+because 2*243=100 does not hold.
+
+The variant function return an integer value for any state. In our case it was given that the variant function (denoted by t) is the same as the function i.
+t({x:10,n:2,y:2,b:3,i:5}) = 5
+----------
+
+Specification
+In case the x is 123, there is only one possible value that can be associated to variable d, such that the postcondition holds. That is d=3:
+{x:123,d:4}
+1000 <= 123 < 10000
+For the state {x:123,d:4} the postcondition is false.
+
+{x:123,d:3}
+100 <= 123 < 1000
+For the state {x:123,d:3} the postcondition is true.
+
+Determine the number of digits of the given natural number x.
+This problem was described by its specification.

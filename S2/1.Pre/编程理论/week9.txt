@@ -1,0 +1,166 @@
+Some repetition of the concept of weakest precondition
+A =(x:N)
+R=(x>10)
+
+S: x:=x-1
+5 -> <5,4>
+0 -> <0,fail> 0 is not in Dp(S)
+a -> <a,a-1> if a>0
+p(S)(a) = {a-1} if a>0
+p(S)(0) = {}
+
+[wp(S,R)] = {a in A| a>0 and a-1>10} =  
+            {a in A| a>0 and a>11} =
+            {a in A| a>11}
+
+wp(S,R) = wp(x:=x-1, x>10) = (x>11)
+
+P = (x>20)
+Executing the program S from any state, where P is true, it is guaranteed that S will terminate without error, and S terminates in states where R is true. It is because P is stronger than wp(S,R). This is the reason why wp(S,R) is called "weakest precondition".
+---------------------------------
+
+Q => wp(S,R)	total correctness formula
+"S program takes us from Q to R"
+S solves the problem given by precondition Q and postcondition R.
+
+A =(x:N)
+P = (x>20)
+R = (x>10)
+S: x:=x-1
+
+P => wp(S,R)
+This means that, in any state for which P is true, wp(S,R) is also true.
+x=5: we do not care about this case as P is not true for the state {x:5}
+-------------------------------
+
+A different (fast) way of calculating wp of an assignment
+
+Example:
+A=(x:Z,y:Z)
+S: x,y:= x-1,y+x      //is not equivalent to the sequence x:=x-1; y:=y+x
+R = (x+y>2)
+
+{x:5,y:2} -> <{x:5,y:2}, {x:4,y:7}>
+
+wp(S,R) = wp(x,y:= x-1,y+x, x+y>2) = (x-1+y+x>2) = (2x+y>3)
+We replaced x with x-1, and x with y+x simultaneously (as this is the effect of the assignment x,y:= x-1,y+x) in the expression R.
+
+Let us illustrate or calculation:
+{x:0,y:1}: in this state the wp(S,R) is false. (Remember: wp(S,R) = (2x+y>3))
+{x:0,y:1} -> <{x:0,y:1}, {x:-1,y:1}> In the last state R is false, so by executing or program 
+starting from the state {x:0,y:1}, we really not terminate in a state where R would be true.
+---
+
+The same example as given above:
+A=(x:N)
+R=(x>10)
+S: x:=x-1
+
+wp(S,R) = wp(x:=x-1, x>10) = (x-1>10 and x>0)
+Instead of using the definition of wp, we replaced x with x-1 in the expression R. We also have to pay attention to the fact that the program x:=x-1 will only terminate faultlessly if x>0 (as x still has to be a natural number after executing x:=x-1).
+
+----------------------------
+Verification rule of the loop
+The concept of invariant and variant function
+
+A = (x:N,d:N,h:N)	t:A->Z		Inv: 10^{d−1} ≤ x and 10^d = h
+			t: x-h+1
+{x:123,d:5,h:45} ->	
+---
+{x:123,d:5,h:45}	79				false
+{x:123,d:1,h:10}	114 //here we start the loop	true
+{x:123,d:2,h:100}	24				true
+{x:123,d:3,h:1000}	-874				true
+Here we can see, that from the point we started our loop, Inv is always true and the value of t is decreasing.
+
+----------------------------
+A=(x:N,y:N,c:N,d:)
+
+Let us consider the following program:
+c,d:= x,y
+while (c!=d)
+{
+  if (c>d) {
+    c:=c-d
+  } else
+  {
+    d:=d-c
+  }
+}
+
+Here c is not a good candidate for variant function, as it is not guaranteed that every iteration of the loop body decreases its value.
+c+d is a good variant function, as regardless whether c>d is true or not, the loop body will decrease the value of c+d for sure.
+----------------------------
+
+A= (x:Z)
+if (sqrt(x)>5)
+{
+  x:=x+2
+} else
+{
+  x:=0
+}
+pi1 = (sqrt(x)>5)
+pi2 = (sqrt(x)<=5)
+
+{x:9} -> <{x:9},{x:0}>
+{x:36} -> <{x:36},{x:38}>
+{x:-9} -> <{x:-9},fail>, as sqrt(-9) is not defined
+---------------------------------
+
+We want to prove: Q => wp(S,R)
+We will use the verification rule of sequence:
+*I. Q => wp(x:=x-y, Q')
+II. Q' => wp(S2, R)
+where S2: y:=x+y; x:= y-x
+
+II. Q' => wp(S2, R), because S2 is a sequence, we apply 
+the verification rule of sequence again:
+*II.1 Q' => wp(y:= x+y,Q'')
+*II.2 Q'' => wp(x:=y-x,R)
+
+Q = (x=x' and y=y')
+R = (y=x' and x=y')
+*I. Q => wp(x:=x-y, Q')
+    Q => wp(x:=x-y, x=x'-y' and y=y')
+    Q => (x-y=x'-y' and y=y')
+    we proved this
+
+*II.1 Q' => wp(y:= x+y, Q'')
+      Q' => wp(y:= x+y, x=x'-y' and y=x')
+      (x=x'-y' and y=y') => (x=x'-y' and x+y=x')
+
+x=x'-y'
+y=y'
+---> x=x'-y
+...
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
